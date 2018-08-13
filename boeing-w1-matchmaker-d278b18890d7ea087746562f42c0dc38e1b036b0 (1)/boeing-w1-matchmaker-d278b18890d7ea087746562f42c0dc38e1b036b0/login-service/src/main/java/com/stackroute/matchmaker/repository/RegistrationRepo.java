@@ -7,6 +7,6 @@ import com.stackroute.matchmaker.model.Registration;
 
 @Repository
 public interface RegistrationRepo extends CrudRepository<Registration, String>{
-	public Registration getUserByUserName(String userName);
+	public Registration getUserByUsername(String username);
 	public Registration getUserByEmail(String email);
 }

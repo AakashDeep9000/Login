@@ -7,17 +7,17 @@ public class Registration {
 
 	private String email;
 	private String password;
-	private String userName;
+	private String username;
 	
 	public Registration() {
 		
 	}
 	
-	public Registration(String email, String password, String userName) {
+	public Registration(String email, String password, String username) {
 		super();
 		this.email = email;
 		this.password = password;
-		this.userName = userName;
+		this.username = username;
 	}
 	
 	public String getEmail() {
@@ -32,15 +32,15 @@ public class Registration {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
-	public void setUserName(String name) {
-		this.userName = name;
+	public void setUsername(String name) {
+		this.username = name;
 	}
 	@Override
 	public String toString() {
-		return "Registration [email=" + email + ", password=" + password + ", userName=" + userName + "]";
+		return "Registration [email=" + email + ", password=" + password + ", userName=" + username + "]";
 	}
 	
 	

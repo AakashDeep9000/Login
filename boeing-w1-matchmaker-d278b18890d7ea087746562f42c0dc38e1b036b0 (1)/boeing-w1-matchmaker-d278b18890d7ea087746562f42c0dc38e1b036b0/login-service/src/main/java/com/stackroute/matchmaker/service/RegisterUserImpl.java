@@ -23,7 +23,7 @@ public class RegisterUserImpl implements RegisterUser{
 
 	@Override
 	public Registration checkForUserName(String userName) throws UserNameAlreadyExistsException{
-		Registration registrant = registrationRepo.getUserByUserName(userName);
+		Registration registrant = registrationRepo.getUserByUsername(userName);
 		if(registrant==null)
 		return registrant;			
 		else 
