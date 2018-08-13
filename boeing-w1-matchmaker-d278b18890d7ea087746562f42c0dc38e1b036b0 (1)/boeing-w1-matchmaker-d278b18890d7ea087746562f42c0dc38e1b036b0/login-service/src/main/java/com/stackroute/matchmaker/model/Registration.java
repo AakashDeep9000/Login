@@ -1,5 +1,8 @@
 package com.stackroute.matchmaker.model;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Registration {
 
 	private String email;

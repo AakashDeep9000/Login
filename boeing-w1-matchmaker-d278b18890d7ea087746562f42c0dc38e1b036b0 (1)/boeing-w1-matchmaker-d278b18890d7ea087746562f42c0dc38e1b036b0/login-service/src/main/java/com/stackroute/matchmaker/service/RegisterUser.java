@@ -9,8 +9,8 @@ import com.stackroute.matchmaker.model.Registration;
 @Service
 public interface RegisterUser {
 	
-	public boolean checkForUserName(Registration registrant) throws UserNameAlreadyExistsException;
-	public boolean checkForEmail(Registration registrant) throws EmailAlreadyExistsException;
+	public Registration checkForUserName(Registration registrant) throws UserNameAlreadyExistsException;
+	public Registration checkForEmail(Registration registrant) throws EmailAlreadyExistsException;
 	public Registration addUser(Registration registrant);
 	
 }
