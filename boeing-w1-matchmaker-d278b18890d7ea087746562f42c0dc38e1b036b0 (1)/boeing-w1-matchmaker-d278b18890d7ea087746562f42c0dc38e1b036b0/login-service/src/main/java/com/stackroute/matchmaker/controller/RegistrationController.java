@@ -52,11 +52,11 @@ public class RegistrationController {
 		try
 		{
 			registerUser.checkForEmail(registrant);
-			return new ResponseEntity<String>("User name valid",HttpStatus.OK);
+			return new ResponseEntity<String>("Email valid",HttpStatus.OK);
 		}
 		catch(EmailAlreadyExistsException e)
 		{
-			return new ResponseEntity<String>("Username taken",HttpStatus.CONFLICT);
+			return new ResponseEntity<String>("Email taken",HttpStatus.CONFLICT);
 		}	
 	}
     
