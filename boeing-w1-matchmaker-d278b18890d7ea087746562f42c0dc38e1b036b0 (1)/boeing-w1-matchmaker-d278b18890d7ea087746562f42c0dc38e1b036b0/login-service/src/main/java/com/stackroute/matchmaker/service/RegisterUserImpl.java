@@ -22,19 +22,22 @@ public class RegisterUserImpl implements RegisterUser{
 	}
 
 	@Override
-	public Registration checkForUserName(Registration registrant) throws UserNameAlreadyExistsException{
-		if(registrationRepo.getUserByUserName(registrant.getUserName())==null)
+	public Registration checkForUserName(String userName) throws UserNameAlreadyExistsException{
+		Registration registrant = registrationRepo.getUserByUserName(userName);
+		if(registrant==null)
 		return registrant;			
 		else 
 		throw new UserNameAlreadyExistsException("User name already present");	
 	}
 
 	@Override
-	public Registration checkForEmail(Registration registrant) throws EmailAlreadyExistsException {
-		if(registrationRepo.getUserByEmail(registrant.getEmail())==null)
+	public Registration checkForEmail(String email) throws EmailAlreadyExistsException {
+		Registration registrant = registrationRepo.getUserByEmail(email);
+		if(registrant==null)
 		return registrant;
-		else
+		else	
 		throw new EmailAlreadyExistsException("Email already present");
+		
 	}	
 
 }

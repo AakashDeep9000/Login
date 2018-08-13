@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,29 +35,29 @@ public class RegistrationController {
 		return new ResponseEntity<String>("New User Added",HttpStatus.CREATED);   	
     }
 	
-	@GetMapping("/register/check/userName")
-	public ResponseEntity<?> checkUserName(@RequestBody Registration registrant) {
+	@GetMapping("/register/check/userName/{userName}")
+	public ResponseEntity<?> checkUserName(@PathVariable("userName") String userName) {
 		try
 		{
-			registerUser.checkForUserName(registrant);
+			registerUser.checkForUserName(userName);
 			return new ResponseEntity<String>("User name valid",HttpStatus.OK);
 		}
 		catch(UserNameAlreadyExistsException e)
 		{
-			return new ResponseEntity<String>("Username taken",HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
 		}
 	}
 	
-	@GetMapping("/register/check/email")
-	public ResponseEntity<?> checkEmail(@RequestBody Registration registrant) {
+	@GetMapping("/register/check/email/{email}")
+	public ResponseEntity<?> checkEmail(@PathVariable("email") String email) {
 		try
 		{
-			registerUser.checkForEmail(registrant);
+			registerUser.checkForEmail(email);
 			return new ResponseEntity<String>("Email valid",HttpStatus.OK);
 		}
 		catch(EmailAlreadyExistsException e)
 		{
-			return new ResponseEntity<String>("Email taken",HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
 		}	
 	}
     
