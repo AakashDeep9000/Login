@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stackroute.matchmaker.exception.EmailAlreadyExistsException;
-import com.stackroute.matchmaker.exception.UserNameAlreadyExistsException;
 import com.stackroute.matchmaker.model.Registration;
 import com.stackroute.matchmaker.service.RegisterUserImpl;
 
@@ -37,26 +35,11 @@ public class RegistrationController {
 	
 	@GetMapping("/register/check/userName/{userName}")
 	public ResponseEntity<?> checkUserName(@PathVariable("userName") String userName) {
-		try
-		{
-			return new ResponseEntity<Registration>(registerUser.checkForUserName(userName),HttpStatus.OK);
-		}
-		catch(UserNameAlreadyExistsException e)
-		{
-			return new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
-		}
+		return new ResponseEntity<Registration>(registerUser.checkForUserName(userName),HttpStatus.OK);
 	}
 	
 	@GetMapping("/register/check/email/{email}")
 	public ResponseEntity<?> checkEmail(@PathVariable("email") String email) {
-		try
-		{
-			return new ResponseEntity<Registration>(registerUser.checkForEmail(email),HttpStatus.OK);
-		}
-		catch(EmailAlreadyExistsException e)
-		{
-			return new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
-		}	
-	}
-    
-}   
+		return new ResponseEntity<Registration>(registerUser.checkForEmail(email),HttpStatus.OK);	
+    } 
+}	
