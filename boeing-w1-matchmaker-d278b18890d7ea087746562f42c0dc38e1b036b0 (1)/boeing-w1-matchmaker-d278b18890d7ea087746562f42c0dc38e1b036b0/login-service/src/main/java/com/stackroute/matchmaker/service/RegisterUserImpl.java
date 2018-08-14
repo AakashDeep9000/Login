@@ -1,12 +1,15 @@
 package com.stackroute.matchmaker.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.stackroute.matchmaker.exception.EmailAlreadyExistsException;
 import com.stackroute.matchmaker.exception.UserNameAlreadyExistsException;
 import com.stackroute.matchmaker.model.Registration;
 import com.stackroute.matchmaker.repository.RegistrationRepo;
 
+
+@Service
 public class RegisterUserImpl implements RegisterUser{
 	
 	private RegistrationRepo registrationRepo; 

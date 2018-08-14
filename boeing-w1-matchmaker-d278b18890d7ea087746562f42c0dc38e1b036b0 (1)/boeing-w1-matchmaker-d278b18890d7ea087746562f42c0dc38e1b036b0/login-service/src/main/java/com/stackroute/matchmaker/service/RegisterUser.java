@@ -6,7 +6,7 @@ import com.stackroute.matchmaker.exception.EmailAlreadyExistsException;
 import com.stackroute.matchmaker.exception.UserNameAlreadyExistsException;
 import com.stackroute.matchmaker.model.Registration;
 
-@Service
+
 public interface RegisterUser {
 	
 	public Registration checkForUserName(String userName) throws UserNameAlreadyExistsException;

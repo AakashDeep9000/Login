@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.stackroute.matchmaker.exception.EmailAlreadyExistsException;
 import com.stackroute.matchmaker.exception.UserNameAlreadyExistsException;
 import com.stackroute.matchmaker.model.Registration;
-import com.stackroute.matchmaker.service.RegisterUser;
+import com.stackroute.matchmaker.service.RegisterUserImpl;
 
 @CrossOrigin("*")
 @RequestMapping("/api/v1")
 @RestController
 public class RegistrationController {
 	
-	private RegisterUser registerUser;
+	private RegisterUserImpl registerUser;
 	
 	@Autowired
-    public RegistrationController(RegisterUser registerUser) {
+    public RegistrationController(RegisterUserImpl registerUser) {
 		this.registerUser = registerUser;
 	}
 
@@ -39,8 +39,7 @@ public class RegistrationController {
 	public ResponseEntity<?> checkUserName(@PathVariable("userName") String userName) {
 		try
 		{
-			registerUser.checkForUserName(userName);
-			return new ResponseEntity<String>("User name valid",HttpStatus.OK);
+			return new ResponseEntity<Registration>(registerUser.checkForUserName(userName),HttpStatus.OK);
 		}
 		catch(UserNameAlreadyExistsException e)
 		{
@@ -52,8 +51,7 @@ public class RegistrationController {
 	public ResponseEntity<?> checkEmail(@PathVariable("email") String email) {
 		try
 		{
-			registerUser.checkForEmail(email);
-			return new ResponseEntity<String>("Email valid",HttpStatus.OK);
+			return new ResponseEntity<Registration>(registerUser.checkForEmail(email),HttpStatus.OK);
 		}
 		catch(EmailAlreadyExistsException e)
 		{
