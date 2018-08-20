@@ -34,6 +34,6 @@
         <module>training-microservice</module>
 		<module>skill-microservice</module>
 		<module>qualification-microservice</module>
-                
+                <module>login-service</module>
        </modules>
 </project>
