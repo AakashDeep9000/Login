@@ -5,15 +5,19 @@ import java.util.Date;
 import javax.servlet.ServletException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.stackroute.matchmaker.exception.UserNameAlreadyExistsException;
 import com.stackroute.matchmaker.model.Login;
 import com.stackroute.matchmaker.model.Registration;
+import com.stackroute.matchmaker.model.Token;
 import com.stackroute.matchmaker.service.RegisterUserImpl;
 
 import io.jsonwebtoken.Jwts;
@@ -34,7 +38,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/login")
-	public String loginUser(@RequestBody Login login) throws ServletException, UserNameAlreadyExistsException {
+	public ResponseEntity<?>  loginUser(@RequestBody Login login) throws ServletException, UserNameAlreadyExistsException {
 
 		String token = "";
 
@@ -60,8 +64,11 @@ public class LoginController {
 		token = Jwts.builder().setSubject(username).claim("roles", "user").setIssuedAt(new Date())
 				.signWith(SignatureAlgorithm.HS256, "secretkey").compact();
         
+		Token t = new Token();
+		t.setUsername(username);
+		t.setToken(token);
 		
-		return token;
+		return new ResponseEntity<Token>(t, HttpStatus.CREATED);
 	}
 
 }
