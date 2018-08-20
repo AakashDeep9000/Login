@@ -3,13 +3,13 @@ package com.stackroute.matchmaker.service;
 
 import com.stackroute.matchmaker.exception.EmailAlreadyExistsException;
 import com.stackroute.matchmaker.exception.UserNameAlreadyExistsException;
-import com.stackroute.matchmaker.model.User;
+import com.stackroute.matchmaker.model.Registration;
 
 
 public interface RegisterUser {
 	
-	public User checkForUserName(String userName) throws UserNameAlreadyExistsException;
-	public User checkForEmail(String email) throws EmailAlreadyExistsException;
-	public User addUser(User registrant);
+	public Registration checkForUserName(String userName) throws UserNameAlreadyExistsException;
+	public Registration checkForEmail(String email) throws EmailAlreadyExistsException;
+	public Registration addUser(Registration registrant);
 	
 }

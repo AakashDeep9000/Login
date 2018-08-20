@@ -14,11 +14,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+
 
 @Configuration
 @EnableWebSecurity
@@ -33,9 +33,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Value("${security.security-realm}")
 	private String securityRealm;
+	
+	private UserDetailsService userDetailsService;
 
 	@Autowired
-	private UserDetailsService userDetailsService;
+	public SecurityConfig(UserDetailsService userDetailsService) {
+		super();
+		this.userDetailsService = userDetailsService;
+	}
+	
+//	@Bean
+//	public UserDetailsService userDetailsServiceBean() throws Exception {
+//	    return super.userDetailsServiceBean();
+//	}
 
 	@Bean
 	@Override
@@ -46,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService)
-		        .passwordEncoder((PasswordEncoder) new ShaPasswordEncoder(encodingStrength));
+		        .passwordEncoder(new ShaPasswordEncoder(encodingStrength));
 	}
 
 	@Override

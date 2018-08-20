@@ -1,11 +1,10 @@
 package com.stackroute.matchmaker.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,30 +15,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.stackroute.matchmaker.exception.EmailAlreadyExistsException;
 import com.stackroute.matchmaker.exception.UserNameAlreadyExistsException;
-import com.stackroute.matchmaker.model.User;
+import com.stackroute.matchmaker.model.Registration;
 import com.stackroute.matchmaker.service.RegisterUserImpl;
-
 @CrossOrigin("*")
 @RequestMapping("/api/v1")
 @RestController
 public class RegistrationController {
 	
 	private RegisterUserImpl registerUser;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-//	@Autowired
-//    private KafkaTemplate<String, User> kafkaTemplate;
-//
-//    private static final String TOPIC = "CassandraRegistration";
-//	
 	@Autowired
-    public RegistrationController(RegisterUserImpl registerUser) {
+    private KafkaTemplate<String, Registration> kafkaTemplate;
+
+    private static final String TOPIC = "CassandraRegistration";
+	
+	@Autowired
+    public RegistrationController(RegisterUserImpl registerUser, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.registerUser = registerUser;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
 	@PostMapping("/register")
-    public ResponseEntity<?> addUser(@RequestBody User registrant) {
+    public ResponseEntity<?> addUser(@RequestBody Registration registrant) {
+        registrant.setPassword(bCryptPasswordEncoder.encode(registrant.getPassword()));
     	registerUser.addUser(registrant);
-//    	kafkaTemplate.send(TOPIC , registrant);
+    	kafkaTemplate.send(TOPIC , registrant);
 		return new ResponseEntity<String>("New User Added",HttpStatus.CREATED);   	
     }
 	
@@ -68,11 +69,5 @@ public class RegistrationController {
 			return true;
 		}	
 	}
-	
-	@GetMapping("/register/check/loginCheck")
-	    @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
-	    public String loginCheck(){
-	        return "Hey There you've logged in";
-	    }
     
 }   

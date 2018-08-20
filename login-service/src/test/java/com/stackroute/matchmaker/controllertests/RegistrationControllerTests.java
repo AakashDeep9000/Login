@@ -6,8 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,8 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stackroute.matchmaker.controller.RegistrationController;
-import com.stackroute.matchmaker.model.Role;
-import com.stackroute.matchmaker.model.User;
+import com.stackroute.matchmaker.model.Registration;
 import com.stackroute.matchmaker.service.RegisterUserImpl;
 
 @RunWith(SpringRunner.class)
@@ -34,25 +32,26 @@ import com.stackroute.matchmaker.service.RegisterUserImpl;
 public class RegistrationControllerTests {
 	
 	private MockMvc mockMvc;
-	private User registrant;
+	private Registration registrant;
 	@Autowired
 	private MockHttpSession session1, session2;
 	
 	@Mock
-    private KafkaTemplate<String, User> kafkaTemplate;
+    private KafkaTemplate<String, Registration> kafkaTemplate;
 	
 	@Mock
 	private RegisterUserImpl registerUser; 
+	@Mock
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@InjectMocks
-	private RegistrationController registrationController = new RegistrationController(registerUser); 
+	private RegistrationController registrationController = new RegistrationController(registerUser,bCryptPasswordEncoder); 
 	
 	@Before
 	public void setup() throws Exception{
 		MockitoAnnotations.initMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(registrationController).build();
-		List<Role> roles = null;
-		registrant = new User("max.freak989@gmail.com","password123","Maximillian78",roles);
+		registrant = new Registration("max.freak989@gmail.com","password123","Maximillian78");
 		session1.setAttribute("loggedInUsername", registrant.getUsername());
 		session2.setAttribute("loggedInEmail", registrant.getEmail());
 	}
@@ -64,11 +63,11 @@ public class RegistrationControllerTests {
 				.andExpect(status().isCreated()).andDo(print());
 	}
 	
-//	@Test
-//	public void checkUserNameTest() throws Exception {
-//	   when(registerUser.checkForUserName("Maximillian78")).thenReturn(registrant);
-//	   mockMvc.perform(get("/api/v1/register/check/userName/{userName}", registrant.getUsername()).session(session1)).andExpect(status().isOk()).andDo(print());
-//	}
+	@Test
+	public void checkUserNameTest() throws Exception {
+	   when(registerUser.checkForUserName("Maximillian78")).thenReturn(registrant);
+	   mockMvc.perform(get("/api/v1/register/check/userName/{userName}", registrant.getUsername()).session(session1)).andExpect(status().isOk()).andDo(print());
+	}
 	
 	public static String asJsonString(final Object obj) {
 		try {

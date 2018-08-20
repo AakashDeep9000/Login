@@ -5,15 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.meanbean.test.BeanTester;
 
-import com.stackroute.matchmaker.model.User;
+import com.stackroute.matchmaker.model.Registration;
 
 public class RegistrationTest {
 	
-	private User registration;
+	private Registration registration;
 	
 	@Before
 	public void setup() throws Exception {
-		registration = new User();
+		registration = new Registration();
 		registration.setEmail("max.payne_234@gmail.com");
 		registration.setPassword("password123");
 		registration.setUsername("Max234");
@@ -21,7 +21,7 @@ public class RegistrationTest {
 
 	@Test
 	public void test() {
-		new BeanTester().testBean(User.class);
+		new BeanTester().testBean(Registration.class);
 	}
 
 }
