@@ -17,57 +17,56 @@ import com.stackroute.matchmaker.exception.EmailAlreadyExistsException;
 import com.stackroute.matchmaker.exception.UserNameAlreadyExistsException;
 import com.stackroute.matchmaker.model.Registration;
 import com.stackroute.matchmaker.service.RegisterUserImpl;
+
 @CrossOrigin("*")
 @RequestMapping("/api/v1")
 @RestController
 public class RegistrationController {
-	
-	private RegisterUserImpl registerUser;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-	
-	@Autowired
-    private KafkaTemplate<String, Registration> kafkaTemplate;
 
-    private static final String TOPIC = "CassandraRegistration";
-	
+	private RegisterUserImpl registerUser;
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	// @Autowired
+	// private KafkaTemplate<String, Registration> kafkaTemplate;
+	//
+	// private static final String TOPIC = "CassandraRegistration";
+	//
 	@Autowired
-    public RegistrationController(RegisterUserImpl registerUser, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	public RegistrationController(RegisterUserImpl registerUser, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.registerUser = registerUser;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
+	@RequestMapping("/")
+	public String hello() {
+		return "In Registration conotroller";
+	}
+
 	@PostMapping("/register")
-    public ResponseEntity<?> addUser(@RequestBody Registration registrant) {
-        registrant.setPassword(bCryptPasswordEncoder.encode(registrant.getPassword()));
-    	registerUser.addUser(registrant);
-    	kafkaTemplate.send(TOPIC , registrant);
-		return new ResponseEntity<String>("New User Added",HttpStatus.CREATED);   	
-    }
-	
+	public ResponseEntity<?> addUser(@RequestBody Registration registrant) {
+		registerUser.addUser(registrant);
+		// kafkaTemplate.send(TOPIC , registrant);
+		return new ResponseEntity<String>("New User Added", HttpStatus.CREATED);
+	}
+
 	@GetMapping("/register/check/userName/{userName}")
 	public boolean checkUserName(@PathVariable("userName") String userName) {
-		try
-		{
+		try {
 			registerUser.checkForUserName(userName);
 			return false;
-		}
-		catch(UserNameAlreadyExistsException e)
-		{
+		} catch (UserNameAlreadyExistsException e) {
 			return true;
 		}
 	}
-	
+
 	@GetMapping("/register/check/email/{email}")
 	public boolean checkEmail(@PathVariable("email") String email) {
-		try
-		{
-			 registerUser.checkForEmail(email);
-			 return false;
-		}
-		catch(EmailAlreadyExistsException e)
-		{
+		try {
+			registerUser.checkForEmail(email);
+			return false;
+		} catch (EmailAlreadyExistsException e) {
 			return true;
-		}	
+		}
 	}
-    
-}   
+
+}
